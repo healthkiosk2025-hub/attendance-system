@@ -73,7 +73,7 @@ if (data.isAdmin) {
 function logout() {
   fetch("/logout", { method: "POST" })
     .then(() => location.href = "/login.html");
-=======
+
 const dateInput = document.getElementById("reportDate");
 dateInput.value = new Date().toISOString().split("T")[0];
 
