@@ -1,0 +1,22 @@
+{
+  "2026-02-05": {
+    "1": {
+      "entry": "17:22",
+      "exit": "5:22:24 pm",
+      "entryMarkedAt": "5:22:21 pm",
+      "ip": "::1"
+    },
+    "2": {
+      "entry": "5:24 PM",
+      "exit": "5:24:08 pm",
+      "entryMarkedAt": "5:24 PM",
+      "ip": "::1"
+    },
+    "3": {
+      "entry": "5:29 PM",
+      "exit": "5:29:16 pm",
+      "entryMarkedAt": "5:29 PM",
+      "ip": "::1"
+    }
+  }
+}
