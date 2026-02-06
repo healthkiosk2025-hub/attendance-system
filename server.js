@@ -57,6 +57,60 @@ function format12Hour(date) {
     hour12: true
   });
 }
+function getMonthFolder(date) {
+  const [y, m] = date.split("-");
+  return `${y}-${m}`;
+}
+
+async function updateDailyReports(date) {
+  const data = read(DATA_FILE);
+  const dayData = data[date] || {};
+
+  const month = getMonthFolder(date);
+  const day = date.split("-")[2];
+
+  // Ensure folders exist
+  ensure(`reports/excel/${month}`);
+  ensure(`reports/pdf/${month}`);
+
+  /* ===== EXCEL ===== */
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet("Attendance");
+
+  ws.addRow(["Name", "Entry", "Exit"]);
+
+  people.forEach(p => {
+    const r = dayData[p.id];
+    ws.addRow([
+      p.name,
+      r?.entry || "-",
+      r?.exit || "-"
+    ]);
+  });
+
+  await wb.xlsx.writeFile(
+    `reports/excel/${month}/${day}.xlsx`
+  );
+
+  /* ===== PDF ===== */
+  const pdfPath = `reports/pdf/${month}/${day}.pdf`;
+  const doc = new PDFDocument({ margin: 40 });
+  doc.pipe(fs.createWriteStream(pdfPath));
+
+  doc.fontSize(16).text(`Attendance Report - ${date}`, {
+    align: "center"
+  });
+  doc.moveDown();
+
+  people.forEach(p => {
+    const r = dayData[p.id];
+    doc.text(
+      `${p.name} | IN: ${r?.entry || "-"} | OUT: ${r?.exit || "-"}`
+    );
+  });
+
+  doc.end();
+}
 
 /* ================= AUTH ================= */
 
@@ -130,6 +184,8 @@ app.post("/api/entry/:id", (req, res) => {
   };
 
   write(DATA_FILE, data);
+  updateDailyReports(today());
+
   res.json({ success: true });
 });
 
@@ -143,6 +199,9 @@ app.post("/api/exit/:id", (req, res) => {
 
   r.exit = format12Hour(nowIST()); // ✅ IST time
   write(DATA_FILE, data);
+updateDailyReports(today());
+
+
   res.json({ success: true });
 });
 
