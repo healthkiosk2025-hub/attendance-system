@@ -9,15 +9,15 @@
 <div class="container">
   <h1>Attendance System</h1>
 
-  <label>Select Date:</label>
-  <input type="date" id="reportDate">
+  <div class="controls">
+    <input type="date" id="reportDate">
+    <button onclick="downloadPDF()">Download PDF</button>
+    <button onclick="downloadExcel()">Download Excel</button>
+  </div>
 
-  <br><br>
-
-  <button onclick="downloadPDF()">Download PDF</button>
-  <button onclick="downloadExcel()">Download Excel</button>
-
-  <br><br>
+  <div id="adminBar" style="display:none; text-align:right;">
+    <button onclick="logout()">Logout</button>
+  </div>
 
   <table>
     <thead>
@@ -28,14 +28,8 @@
         <th>Action</th>
       </tr>
     </thead>
-    <tbody id="tableBody">
-      <!-- rows injected by JS -->
-    </tbody>
+    <tbody id="tableBody"></tbody>
   </table>
-
-  <div id="adminBar" style="display:none;">
-    <button onclick="logout()">Logout</button>
-  </div>
 </div>
 
 <script src="script.js"></script>

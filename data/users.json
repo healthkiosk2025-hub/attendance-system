@@ -1,15 +1,7 @@
-<<<<<<< HEAD
+
 {
   "admin": {
     "username": "admin",
     "password": "admin123"
   }
 }
-=======
-{
-  "admin": {
-    "username": "admin",
-    "password": "admin123"
-  }
-}
->>>>>>> 6052f2d (Initial attendance system)

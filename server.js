@@ -5,6 +5,7 @@ const fs = require("fs");
 const session = require("express-session");
 
 const app = express();
+
 app.use(express.json());
 app.use(express.static("public"));
 app.set("trust proxy", true);
@@ -13,25 +14,18 @@ app.use(
   session({
     secret: "attendance-secret-key",
     resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: 60 * 60 * 1000 }
+    saveUninitialized: false
   })
 );
 
 /* ================= CONFIG ================= */
 
-const OFFICE_IPS = ["49.43.111.148", "127.0.0.1", "::1"];
+const OFFICE_IPS = ["127.0.0.1", "::1"]; // add office public IP later if needed
+
 const DATA_FILE = "data/attendance.json";
 const USERS_FILE = "data/users.json";
 
 /* ================= HELPERS ================= */
-
-function getIP(req) {
-  return (
-    req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
-    req.socket.remoteAddress
-  );
-}
 
 function today() {
   return new Date().toISOString().split("T")[0];
@@ -51,11 +45,7 @@ function ensure(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-function diffMinutes(a, b) {
-  return (a - b) / (1000 * 60);
-}
-
-function format12Hour(date = new Date()) {
+function format12Hour(date) {
   return date.toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",
@@ -116,59 +106,49 @@ app.get("/api/people", (req, res) => {
   });
 });
 
-/* -------- ENTRY -------- */
 app.post("/api/entry/:id", (req, res) => {
-  const ip = getIP(req);
-  if (!OFFICE_IPS.includes(ip))
-    return res.status(403).json({ message: "Office network only" });
-
   const { entryTime } = req.body;
-  const now = new Date();
-  const selected = new Date(`${today()} ${entryTime}`);
-
-  if (diffMinutes(now, selected) < 0 || diffMinutes(now, selected) > 30)
-    return res.status(400).json({ message: "Invalid time" });
+  if (!entryTime) return res.status(400).json({ message: "Time required" });
 
   const data = read(DATA_FILE);
   data[today()] ??= {};
 
-  if (data[today()][req.params.id])
+  if (data[today()][req.params.id]) {
     return res.status(400).json({ message: "Already marked" });
+  }
+
+  const selected = new Date(`${today()}T${entryTime}`);
 
   data[today()][req.params.id] = {
     entry: format12Hour(selected),
-    exit: null,
-    ip
+    exit: null
   };
 
   write(DATA_FILE, data);
   res.json({ success: true });
 });
 
-/* -------- EXIT -------- */
 app.post("/api/exit/:id", (req, res) => {
-  const ip = getIP(req);
-  if (!OFFICE_IPS.includes(ip))
-    return res.status(403).json({ message: "Office network only" });
-
   const data = read(DATA_FILE);
   const r = data[today()]?.[req.params.id];
-  if (!r || r.exit)
+
+  if (!r || r.exit) {
     return res.status(400).json({ message: "Invalid exit" });
+  }
 
   r.exit = format12Hour(new Date());
   write(DATA_FILE, data);
   res.json({ success: true });
 });
 
-/* -------- EXPORTS -------- */
+/* ================= EXPORT ================= */
 
 app.get("/export/pdf-range", requireAdmin, (req, res) => {
   const { from, to } = req.query;
   ensure("pdf-format/pdf");
 
   const file = `pdf-format/pdf/report-${from}-to-${to}.pdf`;
-  const doc = new PDFDocument({ margin: 40 });
+  const doc = new PDFDocument();
   doc.pipe(fs.createWriteStream(file));
 
   doc.fontSize(18).text("Attendance Report", { align: "center" });
@@ -184,7 +164,7 @@ app.get("/export/pdf-range", requireAdmin, (req, res) => {
       .filter(d => d >= from && d <= to)
       .forEach(d => {
         const r = data[d][p.id];
-        if (r) doc.text(`  ${d}: IN ${r.entry} | OUT ${r.exit || "-"}`);
+        if (r) doc.text(`${d}: IN ${r.entry} | OUT ${r.exit || "-"}`);
       });
 
     doc.moveDown();
@@ -200,6 +180,7 @@ app.get("/export/excel-range", requireAdmin, async (req, res) => {
 
   const wb = new ExcelJS.Workbook();
   const ws = wb.addWorksheet("Attendance");
+
   ws.addRow(["Name", "Date", "Entry", "Exit"]);
 
   const data = read(DATA_FILE);
@@ -221,6 +202,6 @@ app.get("/export/excel-range", requireAdmin, async (req, res) => {
 /* ================= SERVER ================= */
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-});
+app.listen(PORT, () =>
+  console.log(`✅ Server running on port ${PORT}`)
+);

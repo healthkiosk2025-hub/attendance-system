@@ -3,20 +3,23 @@ const tableBody = document.getElementById("tableBody");
 const adminBar = document.getElementById("adminBar");
 
 dateInput.value = new Date().toISOString().split("T")[0];
-
 load();
+
 dateInput.addEventListener("change", load);
 
 function load() {
   fetch(`/api/people?date=${dateInput.value}`)
-    .then(res => res.json())
+    .then(res => {
+      if (res.status === 401) location.href = "/login.html";
+      return res.json();
+    })
     .then(data => {
       tableBody.innerHTML = "";
 
       data.people.forEach(p => {
         const r = data.attendance[p.id] || {};
-
         let action = "-";
+
         if (data.canEdit) {
           if (!r.entry) {
             action = `
