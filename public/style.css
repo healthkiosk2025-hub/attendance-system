@@ -25,61 +25,41 @@ body {
 /* ===== HEADER ===== */
 h1 {
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
-/* ===== TOP CONTROLS ===== */
+/* ===== CONTROLS ===== */
 .controls {
   display: flex;
-  flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
-  align-items: center;
   margin-bottom: 15px;
 }
 
 .controls input,
 .controls button {
-  padding: 8px 12px;
+  padding: 10px;
   font-size: 14px;
 }
 
-/* ===== TABLE WRAPPER ===== */
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto; /* 🔑 mobile scroll */
-}
-
-/* ===== TABLE ===== */
+/* ===== TABLE (DESKTOP) ===== */
 table {
   width: 100%;
-  min-width: 600px;
   border-collapse: collapse;
 }
 
 th, td {
   border: 1px solid #ccc;
-  padding: 8px;
+  padding: 10px;
   text-align: center;
-  font-size: 14px;
 }
 
 th {
   background: #f0f0f0;
 }
 
-/* ===== BUTTONS ===== */
-button {
-  padding: 6px 10px;
-  cursor: pointer;
-}
-
-input[type="time"] {
-  padding: 4px;
-}
-
-/* ===== MOBILE OPTIMIZATION ===== */
-@media (max-width: 600px) {
+/* ===== MOBILE VIEW ===== */
+@media (max-width: 768px) {
 
   h1 {
     font-size: 18px;
@@ -94,43 +74,7 @@ input[type="time"] {
     width: 100%;
   }
 
-  table {
-    min-width: 520px;
-  }
-}
-/* ================= MOBILE RESPONSIVE ================= */
-
-@media (max-width: 768px) {
-
-  body {
-    padding: 10px;
-  }
-
-  .container {
-    padding: 15px;
-  }
-
-  h1 {
-    font-size: 20px;
-    text-align: center;
-  }
-
-  /* Date + buttons stack */
-  .controls {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .controls input,
-  .controls button {
-    width: 100%;
-    font-size: 16px;
-    padding: 10px;
-  }
-
-  /* Table becomes card layout */
-  table, thead, tbody, th, td, tr {
+  table, thead, tbody, tr, td {
     display: block;
   }
 
@@ -141,22 +85,22 @@ input[type="time"] {
   tr {
     background: #fff;
     margin-bottom: 12px;
+    padding: 12px;
     border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   }
 
   td {
     border: none;
     padding: 6px 0;
-    font-size: 15px;
+    text-align: left;
   }
 
   td::before {
     font-weight: bold;
     display: block;
-    margin-bottom: 3px;
     color: #555;
+    margin-bottom: 2px;
   }
 
   td:nth-child(1)::before { content: "Name"; }
@@ -164,16 +108,10 @@ input[type="time"] {
   td:nth-child(3)::before { content: "Exit"; }
   td:nth-child(4)::before { content: "Action"; }
 
-  /* Entry controls stack */
-  td input[type="time"] {
-    width: 100%;
-    margin-bottom: 6px;
-    padding: 8px;
-  }
-
-  td button {
+  input[type="time"],
+  button {
     width: 100%;
     padding: 10px;
-    font-size: 15px;
+    margin-top: 6px;
   }
 }
