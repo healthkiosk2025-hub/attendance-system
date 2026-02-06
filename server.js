@@ -44,6 +44,11 @@ function write(file, data) {
 function ensure(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
+function nowIST() {
+  return new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+  );
+}
 
 function format12Hour(date) {
   return date.toLocaleTimeString("en-US", {
@@ -136,10 +141,11 @@ app.post("/api/exit/:id", (req, res) => {
     return res.status(400).json({ message: "Invalid exit" });
   }
 
-  r.exit = format12Hour(new Date());
+  r.exit = format12Hour(nowIST()); // ✅ IST time
   write(DATA_FILE, data);
   res.json({ success: true });
 });
+
 
 /* ================= EXPORT ================= */
 
