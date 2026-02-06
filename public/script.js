@@ -4,27 +4,14 @@ const adminBar = document.getElementById("adminBar");
 
 dateInput.value = new Date().toISOString().split("T")[0];
 
-dateInput.addEventListener("change", load);
 load();
+dateInput.addEventListener("change", load);
 
 function load() {
   fetch(`/api/people?date=${dateInput.value}`)
-    .then(res => {
-      if (res.status === 401) {
-        location.href = "/login.html";
-        return;
-      }
-      return res.json();
-    })
+    .then(res => res.json())
     .then(data => {
-      if (!data) return;
-
       tableBody.innerHTML = "";
-
-      // admin bar visibility
-      if (adminBar) {
-        adminBar.style.display = data.isAdmin ? "block" : "none";
-      }
 
       data.people.forEach(p => {
         const r = data.attendance[p.id] || {};
@@ -52,20 +39,18 @@ function load() {
           </tr>
         `;
       });
+
+      adminBar.style.display = data.isAdmin ? "block" : "none";
     });
 }
 
 function markEntry(id) {
-  const timeInput = document.getElementById("t" + id);
-  if (!timeInput || !timeInput.value) {
-    alert("Please select entry time");
-    return;
-  }
-
   fetch(`/api/entry/${id}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ entryTime: timeInput.value })
+    body: JSON.stringify({
+      entryTime: document.getElementById("t" + id).value
+    })
   }).then(load);
 }
 
@@ -83,5 +68,5 @@ function downloadExcel() {
 
 function logout() {
   fetch("/logout", { method: "POST" })
-    .then(() => (location.href = "/login.html"));
+    .then(() => location.href = "/login.html");
 }
