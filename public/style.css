@@ -1,28 +1,59 @@
-body {
+/* ===== RESET ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   font-family: Arial, sans-serif;
-  background: #eef;
-  padding: 20px;
 }
 
+/* ===== PAGE ===== */
+body {
+  background: #f2f4ff;
+  padding: 12px;
+}
+
+/* ===== MAIN CARD ===== */
 .container {
-  background: #fff;
-  padding: 20px;
   max-width: 1000px;
   margin: auto;
-  border-radius: 8px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
+/* ===== HEADER ===== */
 h1 {
   text-align: center;
+  margin-bottom: 12px;
 }
 
+/* ===== TOP CONTROLS ===== */
 .controls {
-  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 15px;
 }
 
+.controls input,
+.controls button {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+/* ===== TABLE WRAPPER ===== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto; /* 🔑 mobile scroll */
+}
+
+/* ===== TABLE ===== */
 table {
   width: 100%;
+  min-width: 600px;
   border-collapse: collapse;
 }
 
@@ -30,9 +61,40 @@ th, td {
   border: 1px solid #ccc;
   padding: 8px;
   text-align: center;
+  font-size: 14px;
 }
 
+th {
+  background: #f0f0f0;
+}
+
+/* ===== BUTTONS ===== */
 button {
-  padding: 6px 12px;
+  padding: 6px 10px;
   cursor: pointer;
+}
+
+input[type="time"] {
+  padding: 4px;
+}
+
+/* ===== MOBILE OPTIMIZATION ===== */
+@media (max-width: 600px) {
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .controls input,
+  .controls button {
+    width: 100%;
+  }
+
+  table {
+    min-width: 520px;
+  }
 }
