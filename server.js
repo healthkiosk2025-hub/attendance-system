@@ -222,32 +222,58 @@ app.post("/api/entry/:id", async (req, res) => {
   const person = people.find(p => p.id == req.params.id);
   const entryTime = format12Hour(new Date());
 
-  await saveToSheet({
-    date: today(),
-    id: person.id,
-    name: person.name,
-    entry: entryTime,
-    exit: ""
-  });
+const data = read(DATA_FILE);
+data[today()] ??= {};
+
+data[today()][person.id] = {
+  entry: entryTime,
+  exit: null
+};
+
+write(DATA_FILE, data);
+
+await saveToSheet({
+  date: today(),
+  id: person.id,
+  name: person.name,
+  entry: entryTime,
+  exit: ""
+});
+
+await updateDailyReports(today());
 
   res.json({ success: true });
-});
+}); // ✅ CLOSE ENTRY ROUTE
+
+
 
 
 app.post("/api/exit/:id", async (req, res) => {
   const person = people.find(p => p.id == req.params.id);
   const exitTime = format12Hour(new Date());
 
-  await saveToSheet({
-    date: today(),
-    id: person.id,
-    name: person.name,
-    entry: "",
-    exit: exitTime
-  });
+const data = read(DATA_FILE);
+if (!data[today()]?.[person.id]) {
+  return res.status(400).json({ message: "No entry found" });
+}
+
+data[today()][person.id].exit = exitTime;
+write(DATA_FILE, data);
+
+await saveToSheet({
+  date: today(),
+  id: person.id,
+  name: person.name,
+  entry: data[today()][person.id].entry,
+  exit: exitTime
+});
+
+await updateDailyReports(today());
 
   res.json({ success: true });
-});
+}); // ✅ CLOSE ENTRY ROUTE
+
+
 
 
 /* ================= EXPORT ================= */

@@ -9,10 +9,7 @@ dateInput.addEventListener("change", load);
 
 function load() {
   fetch(`/api/people?date=${dateInput.value}`)
-    .then(res => {
-      if (res.status === 401) location.href = "/login.html";
-      return res.json();
-    })
+    .then(res => res.json())
     .then(data => {
       tableBody.innerHTML = "";
 
@@ -22,10 +19,7 @@ function load() {
 
         if (data.canEdit) {
           if (!r.entry) {
-            action = `
-              <input type="time" id="t${p.id}">
-              <button onclick="markEntry(${p.id})">Entry</button>
-            `;
+            action = `<button onclick="markEntry(${p.id})">Entry</button>`;
           } else if (!r.exit) {
             action = `<button onclick="markExit(${p.id})">Exit</button>`;
           } else {
@@ -48,13 +42,7 @@ function load() {
 }
 
 function markEntry(id) {
-  fetch(`/api/entry/${id}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      entryTime: document.getElementById("t" + id).value
-    })
-  }).then(load);
+  fetch(`/api/entry/${id}`, { method: "POST" }).then(load);
 }
 
 function markExit(id) {
