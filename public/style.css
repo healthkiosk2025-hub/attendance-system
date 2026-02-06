@@ -98,3 +98,82 @@ input[type="time"] {
     min-width: 520px;
   }
 }
+/* ================= MOBILE RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  /* Date + buttons stack */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .controls input,
+  .controls button {
+    width: 100%;
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  /* Table becomes card layout */
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    background: #fff;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  td {
+    border: none;
+    padding: 6px 0;
+    font-size: 15px;
+  }
+
+  td::before {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 3px;
+    color: #555;
+  }
+
+  td:nth-child(1)::before { content: "Name"; }
+  td:nth-child(2)::before { content: "Entry"; }
+  td:nth-child(3)::before { content: "Exit"; }
+  td:nth-child(4)::before { content: "Action"; }
+
+  /* Entry controls stack */
+  td input[type="time"] {
+    width: 100%;
+    margin-bottom: 6px;
+    padding: 8px;
+  }
+
+  td button {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+  }
+}
