@@ -1,87 +1,37 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Attendance System</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="container">
+    <h1>Attendance System</h1>
 
-<div class="container">
-  <h1>Attendance System</h1>
+    <div class="controls">
+      <label>
+        Select Date:
+        <input type="date" id="dateInput" />
+      </label>
+      <br /><br />
+      <button onclick="downloadPDF()">Download PDF</button>
+      <button onclick="downloadExcel()">Download Excel</button>
+    </div>
 
-  <div class="controls">
-    <label>Select Date:</label>
-    <input type="date" id="reportDate">
-
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Entry</th>
+          <th>Exit</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
   </div>
-<div id="adminBar" style="display:none; text-align:right;">
-  <button onclick="logout()">Logout</button>
-</div>
 
-  <div class="controls admin-only">
-    <button onclick="downloadPDF()">Download PDF</button>
-    <button onclick="downloadExcel()">Download Excel</button>
-  </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Entry</th>
-        <th>Exit</th>
-      
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody"></tbody>
-  </table>
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
-=======
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Attendance System</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<div class="container">
-  <h1>Attendance System</h1>
-
-  <div class="controls">
-    <label>Select Date:</label>
-    <input type="date" id="reportDate">
-
-  </div>
-<div id="adminBar" style="display:none; text-align:right;">
-  <button onclick="logout()">Logout</button>
-</div>
-
-  <div class="controls admin-only">
-    <button onclick="downloadPDF()">Download PDF</button>
-    <button onclick="downloadExcel()">Download Excel</button>
-  </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Entry</th>
-        <th>Exit</th>
-      
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody"></tbody>
-  </table>
-</div>
-
-<script src="script.js"></script>
-</body>
-</html>
->>>>>>> 6052f2d (Initial attendance system)
